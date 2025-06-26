@@ -1,9 +1,7 @@
 package com.beci.product_service;
 
 import com.beci.product_service.dto.ProductRequest;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -12,12 +10,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
-
 import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-
-import java.math.BigDecimal;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -44,18 +39,24 @@ class ProductServiceApplicationTests {
 	@Test
 	void shouldCreateProduct() throws Exception {
 		ProductRequest productRequest = getProductRequest();
-		String productRequestString = objectMapper.writeValueAsString(productRequest);
+		String requestBody = objectMapper.writeValueAsString(productRequest);
 
 		mockMvc.perform(post("/api/product")
 						.contentType(MediaType.APPLICATION_JSON)
-						.content(productRequestString))
+						.content(requestBody)
+						.header("Authorization", "Bearer " + getMockedToken())) // doar dacă endpointul e protejat
 				.andExpect(status().isCreated());
 	}
 
 	private ProductRequest getProductRequest() {
 		return ProductRequest.builder()
 				.name("iPhone 13")
-				.price(BigDecimal.valueOf(1200))
+				.price(1200.0)
 				.build();
+	}
+
+	// Înlocuiește cu token JWT real sau simulat dacă testul e securizat
+	private String getMockedToken() {
+		return "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9....";
 	}
 }

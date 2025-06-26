@@ -2,27 +2,68 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Editare produs</title>
+    <meta charset="UTF-8"/>
 </head>
 <body>
 <h2>Editare produs</h2>
+
 <form th:action="@{'/products/update/' + ${product.id}}" th:object="${product}" method="post">
     <label for="name">Nume:</label>
     <input type="text" th:field="*{name}" id="name"/><br/>
 
-    <label for="description">Descriere:</label>
-    <input type="text" th:field="*{description}" id="description"/><br/>
+    <label for="shortDescription">Descriere scurtă:</label>
+    <input type="text" th:field="*{shortDescription}" id="shortDescription"/><br/>
+
+    <label for="description">Descriere detaliată:</label>
+    <textarea th:field="*{description}" id="description"></textarea><br/>
 
     <label for="price">Preț:</label>
     <input type="number" step="0.01" th:field="*{price}" id="price"/><br/>
 
+    <label for="discountPrice">Preț redus:</label>
+    <input type="number" step="0.01" th:field="*{discountPrice}" id="discountPrice"/><br/>
+
+    <label for="stockQuantity">Stoc:</label>
+    <input type="number" th:field="*{stockQuantity}" id="stockQuantity"/><br/>
+
+    <label for="sku">SKU:</label>
+    <input type="text" th:field="*{sku}" id="sku"/><br/>
+
+    <label for="brand">Brand:</label>
+    <input type="text" th:field="*{brand}" id="brand"/><br/>
+
+    <label for="tags">Etichete (separate prin virgulă):</label>
+    <input type="text" th:field="*{tags}" id="tags"/><br/>
+
+    <label for="imageUrls">Imagini (URL-uri separate prin virgulă):</label>
+    <input type="text" th:field="*{imageUrls}" id="imageUrls"/><br/>
+
+    <label for="weight">Greutate (kg):</label>
+    <input type="number" step="0.01" th:field="*{weight}" id="weight"/><br/>
+
+    <label for="dimensions">Dimensiuni:</label>
+    <input type="text" th:field="*{dimensions}" id="dimensions"/><br/>
+
     <label for="categoryId">Categorie:</label>
     <select th:field="*{categoryId}" id="categoryId">
         <option value="">-- selectează --</option>
-        <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"></option>
+        <option th:each="cat : ${categories}"
+                th:value="${cat.id}"
+                th:text="${cat.name}"
+                th:selected="${cat.id == product.categoryId}"></option>
     </select><br/>
 
-    <button type="submit">Actualizează</button>
+    <label>
+        <input type="checkbox" th:field="*{active}"/> Activ
+    </label>
+    <label>
+        <input type="checkbox" th:field="*{featured}"/> Recomandat
+    </label>
+    <br/>
+
+    <button type="submit">Actualizează produsul</button>
 </form>
-<a th:href="@{/products}">Înapoi la listă</a>
+
+<p><a th:href="@{/products}">← Înapoi la listă</a></p>
 </body>
 </html>

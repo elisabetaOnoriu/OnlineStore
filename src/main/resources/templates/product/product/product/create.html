@@ -2,18 +2,53 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Adaugă produs</title>
+    <meta charset="UTF-8"/>
 </head>
 <body>
-<h2>Adaugă produs</h2>
+<h2>Adaugă produs nou</h2>
+
 <form th:action="@{/products}" th:object="${product}" method="post">
     <label for="name">Nume:</label>
-    <input type="text" th:field="*{name}" id="name"/><br/>
+    <input type="text" th:field="*{name}" id="name"/>
+    <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+    <br/>
 
-    <label for="description">Descriere:</label>
-    <input type="text" th:field="*{description}" id="description"/><br/>
+    <label for="shortDescription">Descriere scurtă:</label>
+    <input type="text" th:field="*{shortDescription}" id="shortDescription"/><br/>
+
+    <label for="description">Descriere detaliată:</label>
+    <textarea th:field="*{description}" id="description"></textarea>
+    <div th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
+    <br/>
 
     <label for="price">Preț:</label>
-    <input type="number" step="0.01" th:field="*{price}" id="price"/><br/>
+    <input type="number" step="0.01" th:field="*{price}" id="price"/>
+    <div th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></div>
+    <br/>
+
+    <label for="discountPrice">Preț redus:</label>
+    <input type="number" step="0.01" th:field="*{discountPrice}" id="discountPrice"/><br/>
+
+    <label for="stockQuantity">Stoc:</label>
+    <input type="number" th:field="*{stockQuantity}" id="stockQuantity"/><br/>
+
+    <label for="sku">SKU:</label>
+    <input type="text" th:field="*{sku}" id="sku"/><br/>
+
+    <label for="brand">Brand:</label>
+    <input type="text" th:field="*{brand}" id="brand"/><br/>
+
+    <label for="tags">Etichete (separate prin virgulă):</label>
+    <input type="text" th:field="*{tags}" id="tags"/><br/>
+
+    <label for="imageUrls">Imagini (URL-uri separate prin virgulă):</label>
+    <input type="text" th:field="*{imageUrls}" id="imageUrls"/><br/>
+
+    <label for="weight">Greutate (kg):</label>
+    <input type="number" step="0.01" th:field="*{weight}" id="weight"/><br/>
+
+    <label for="dimensions">Dimensiuni:</label>
+    <input type="text" th:field="*{dimensions}" id="dimensions"/><br/>
 
     <label for="categoryId">Categorie:</label>
     <select th:field="*{categoryId}" id="categoryId">
@@ -21,8 +56,17 @@
         <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"></option>
     </select><br/>
 
-    <button type="submit">Salvează</button>
+    <label>
+        <input type="checkbox" th:field="*{active}"/> Activ
+    </label>
+    <label>
+        <input type="checkbox" th:field="*{featured}"/> Recomandat
+    </label>
+    <br/>
+
+    <button type="submit">Salvează produsul</button>
 </form>
-<a th:href="@{/products}">Înapoi la listă</a>
+
+<p><a th:href="@{/products}">← Înapoi la listă</a></p>
 </body>
 </html>

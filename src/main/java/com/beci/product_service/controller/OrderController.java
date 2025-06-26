@@ -5,8 +5,10 @@ import com.beci.product_service.dto.OrderResponse;
 import com.beci.product_service.mapper.OrderMapper;
 import com.beci.product_service.model.Order;
 import com.beci.product_service.model.User;
+import com.beci.product_service.model.Address;
 import com.beci.product_service.repository.OrderRepository;
 import com.beci.product_service.repository.UserRepository;
+import com.beci.product_service.repository.AddressRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,6 +28,9 @@ public class OrderController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private AddressRepository addressRepository;
+
     // 1. Lista comenzilor
     @GetMapping
     public String listOrders(Model model) {
@@ -43,6 +48,7 @@ public class OrderController {
     public String showCreateForm(Model model) {
         model.addAttribute("order", new OrderRequest());
         model.addAttribute("users", userRepository.findAll());
+        model.addAttribute("addresses", addressRepository.findAll());
         return "order/create";
     }
 
@@ -51,7 +57,20 @@ public class OrderController {
     public String saveOrder(@ModelAttribute("order") @Valid OrderRequest request) {
         User user = userRepository.findById(request.getUserId()).orElse(null);
         if (user == null) return "redirect:/orders"; // sau redirect la eroare
-        Order order = OrderMapper.toEntity(request, user);
+
+        // Găsim adresele doar dacă sunt specificate
+        Address shippingAddress = null;
+        Address billingAddress = null;
+
+        if (request.getShippingAddressId() != null && !request.getShippingAddressId().isEmpty()) {
+            shippingAddress = addressRepository.findById(request.getShippingAddressId()).orElse(null);
+        }
+
+        if (request.getBillingAddressId() != null && !request.getBillingAddressId().isEmpty()) {
+            billingAddress = addressRepository.findById(request.getBillingAddressId()).orElse(null);
+        }
+
+        Order order = OrderMapper.toEntity(request, user, shippingAddress, billingAddress);
         orderRepository.save(order);
         return "redirect:/orders";
     }
@@ -65,10 +84,21 @@ public class OrderController {
         OrderRequest dto = new OrderRequest();
         dto.setUserId(order.getUser().getId());
         dto.setStatus(order.getStatus());
+        dto.setPaymentMethod(order.getPaymentMethod());
+        dto.setNotes(order.getNotes());
+
+        // Setăm adresele dacă există
+        if (order.getShippingAddress() != null) {
+            dto.setShippingAddressId(order.getShippingAddress().getId());
+        }
+        if (order.getBillingAddress() != null) {
+            dto.setBillingAddressId(order.getBillingAddress().getId());
+        }
 
         model.addAttribute("orderId", order.getId());
         model.addAttribute("order", dto);
         model.addAttribute("users", userRepository.findAll());
+        model.addAttribute("addresses", addressRepository.findAll());
 
         return "order/edit";
     }
@@ -82,6 +112,20 @@ public class OrderController {
             if (user != null) {
                 existing.setUser(user);
                 existing.setStatus(request.getStatus());
+                existing.setPaymentMethod(request.getPaymentMethod());
+                existing.setNotes(request.getNotes());
+
+                // Actualizăm adresele
+                if (request.getShippingAddressId() != null && !request.getShippingAddressId().isEmpty()) {
+                    Address shippingAddress = addressRepository.findById(request.getShippingAddressId()).orElse(null);
+                    existing.setShippingAddress(shippingAddress);
+                }
+
+                if (request.getBillingAddressId() != null && !request.getBillingAddressId().isEmpty()) {
+                    Address billingAddress = addressRepository.findById(request.getBillingAddressId()).orElse(null);
+                    existing.setBillingAddress(billingAddress);
+                }
+
                 orderRepository.save(existing);
             }
         }

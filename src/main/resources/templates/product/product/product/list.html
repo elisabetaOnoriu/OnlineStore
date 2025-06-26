@@ -6,18 +6,19 @@
 <body>
 <h2>Produse</h2>
 <a th:href="@{/products/new}">Adaugă produs</a>
+
 <table border="1">
   <thead>
   <tr>
-    <th>Nume</th>
-    <th>Descriere</th>
-    <th>Preț</th>
+    <th><a th:href="@{'/products?page=0&sortBy=name&order=' + ${order == 'asc' ? 'desc' : 'asc'}}">Nume</a></th>
+    <th><a th:href="@{'/products?page=0&sortBy=description&order=' + ${order == 'asc' ? 'desc' : 'asc'}}">Descriere</a></th>
+    <th><a th:href="@{'/products?page=0&sortBy=price&order=' + ${order == 'asc' ? 'desc' : 'asc'}}">Preț</a></th>
     <th>Categorie</th>
     <th>Acțiuni</th>
   </tr>
   </thead>
   <tbody>
-  <tr th:each="product : ${products}">
+  <tr th:each="product : ${productPage.content}">
     <td th:text="${product.name}">Nume</td>
     <td th:text="${product.description}">Descriere</td>
     <td th:text="${product.price}">Preț</td>
@@ -29,5 +30,19 @@
   </tr>
   </tbody>
 </table>
+
+<!-- PAGINATION -->
+<div>
+    <span th:if="${productPage.totalPages > 1}">
+        <a th:href="@{'/products?page=0&sortBy=' + ${sortBy} + '&order=' + ${order}}">&laquo;</a>
+        <span th:each="i : ${#numbers.sequence(0, productPage.totalPages - 1)}">
+            <a th:href="@{'/products?page=' + ${i} + '&sortBy=' + ${sortBy} + '&order=' + ${order}}"
+               th:text="${i + 1}"
+               th:classappend="${i == productPage.number} ? 'active' : ''">1</a>
+        </span>
+        <a th:href="@{'/products?page=' + ${productPage.totalPages - 1} + '&sortBy=' + ${sortBy} + '&order=' + ${order}}">&raquo;</a>
+    </span>
+</div>
+
 </body>
 </html>

@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -78,8 +79,10 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public List<Product> getActiveProducts() {
-        return productRepository.findByActiveTrue();
+    public List<Product> getActiveProductsWithoutPagination() {
+        return productRepository.findAll().stream()
+                .filter(Product::isActive)
+                .collect(Collectors.toList());
     }
 
     public Page<Product> getActiveProducts(Pageable pageable) {

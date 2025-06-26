@@ -8,12 +8,13 @@ import com.beci.product_service.model.Product;
 import com.beci.product_service.repository.CategoryRepository;
 import com.beci.product_service.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/products")
@@ -28,14 +29,26 @@ public class ProductController {
     @Autowired
     private ProductMapper productMapper;
 
-    // 1. Lista produse
+    // 1. Lista produse cu paginare și sortare
     @GetMapping
-    public String listProducts(Model model) {
-        List<ProductResponse> products = productRepository.findAll()
-                .stream()
-                .map(productMapper::toResponse)
-                .collect(Collectors.toList());
-        model.addAttribute("products", products);
+    public String listProducts(
+            Model model,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "name") String sortBy,
+            @RequestParam(defaultValue = "asc") String order
+    ) {
+        Sort.Direction direction = order.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
+
+        Page<Product> productPage = productRepository.findByActiveTrue(pageable);
+        Page<ProductResponse> responsePage = productPage.map(productMapper::toResponse);
+
+        model.addAttribute("products", responsePage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", responsePage.getTotalPages());
+        model.addAttribute("sortBy", sortBy);
+        model.addAttribute("order", order);
         return "product/list";
     }
 
