@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Lista produse</title>
+</head>
+<body>
+<h2>Produse</h2>
+<a th:href="@{/products/new}">Adaugă produs</a>
+<table border="1">
+  <thead>
+  <tr>
+    <th>Nume</th>
+    <th>Descriere</th>
+    <th>Preț</th>
+    <th>Categorie</th>
+    <th>Acțiuni</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="product : ${products}">
+    <td th:text="${product.name}">Nume</td>
+    <td th:text="${product.description}">Descriere</td>
+    <td th:text="${product.price}">Preț</td>
+    <td th:text="${product.categoryName}">Categorie</td>
+    <td>
+      <a th:href="@{'/products/edit/' + ${product.id}}">Editare</a> |
+      <a th:href="@{'/products/delete/' + ${product.id}}" onclick="return confirm('Ștergi produsul?')">Ștergere</a>
+    </td>
+  </tr>
+  </tbody>
+</table>
+</body>
+</html>

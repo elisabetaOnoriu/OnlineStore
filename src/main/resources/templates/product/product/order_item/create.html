@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Adaugă articol în comandă</title>
+</head>
+<body>
+<h2>Adaugă articol</h2>
+
+<form th:action="@{/order-items}" th:object="${orderItem}" method="post">
+
+    <label for="orderId">Comandă:</label>
+    <select id="orderId" th:field="*{orderId}" required>
+        <option value="">-- Selectează comandă --</option>
+        <option th:each="order : ${orders}" th:value="${order.id}" th:text="${order.id}"></option>
+    </select><br/>
+
+    <label for="productId">Produs:</label>
+    <select id="productId" th:field="*{productId}" required>
+        <option value="">-- Selectează produs --</option>
+        <option th:each="p : ${products}" th:value="${p.id}" th:text="${p.name}"></option>
+    </select><br/>
+
+    <label for="quantity">Cantitate:</label>
+    <input type="number" id="quantity" th:field="*{quantity}" min="1" required/><br/>
+
+    <label for="unitPrice">Preț unitar:</label>
+    <input type="number" id="unitPrice" th:field="*{unitPrice}" step="0.01" required/><br/>
+
+    <button type="submit">Salvează</button>
+</form>
+
+<a th:href="@{/order-items}">Înapoi la listă</a>
+</body>
+</html>

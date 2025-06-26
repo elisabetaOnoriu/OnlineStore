@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Editare recenzie</title>
+</head>
+<body>
+<h2>Editează recenzie</h2>
+<form th:action="@{'/reviews/update/' + ${review.id}}" th:object="${review}" method="post">
+    <label th:for="userId">Utilizator:</label>
+    <select th:field="*{user}" th:id="userId">
+        <option th:each="user : ${users}" th:value="${user}" th:text="${user.username}"></option>
+    </select>
+
+    <label th:for="productId">Produs:</label>
+    <select th:field="*{product}" th:id="productId">
+        <option th:each="product : ${products}" th:value="${product}" th:text="${product.name}"></option>
+    </select>
+
+    <label th:for="rating">Rating:</label>
+    <input type="number" th:field="*{rating}" th:id="rating" min="1" max="5"/>
+
+    <label th:for="title">Titlu:</label>
+    <input type="text" th:field="*{title}" th:id="title"/>
+
+    <label th:for="comment">Comentariu:</label>
+    <textarea th:field="*{comment}" th:id="comment"></textarea>
+
+    <label th:for="verified">Cumpărat verificat:</label>
+    <input type="checkbox" th:field="*{verified}" th:id="verified"/>
+
+    <label th:for="approved">Aprobat:</label>
+    <input type="checkbox" th:field="*{approved}" th:id="approved"/>
+
+    <button type="submit">Actualizează</button>
+</form>
+</body>
+</html>

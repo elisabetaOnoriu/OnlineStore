@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Creare comandă</title>
+</head>
+<body>
+<h2>Adaugă comandă</h2>
+
+<form th:action="@{/orders}" th:object="${order}" method="post">
+
+    <label for="userId">Utilizator:</label>
+    <select id="userId" th:field="*{userId}" required>
+        <option value="">-- Selectează utilizator --</option>
+        <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.username}"></option>
+    </select><br/>
+
+    <label for="status">Status:</label>
+    <input type="text" id="status" th:field="*{status}" required/><br/>
+
+    <button type="submit">Salvează</button>
+</form>
+
+<a th:href="@{/orders}">Înapoi la listă</a>
+</body>
+</html>

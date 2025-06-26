@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Adaugă produs</title>
+</head>
+<body>
+<h2>Adaugă produs</h2>
+<form th:action="@{/products}" th:object="${product}" method="post">
+    <label for="name">Nume:</label>
+    <input type="text" th:field="*{name}" id="name"/><br/>
+
+    <label for="description">Descriere:</label>
+    <input type="text" th:field="*{description}" id="description"/><br/>
+
+    <label for="price">Preț:</label>
+    <input type="number" step="0.01" th:field="*{price}" id="price"/><br/>
+
+    <label for="categoryId">Categorie:</label>
+    <select th:field="*{categoryId}" id="categoryId">
+        <option value="">-- selectează --</option>
+        <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"></option>
+    </select><br/>
+
+    <button type="submit">Salvează</button>
+</form>
+<a th:href="@{/products}">Înapoi la listă</a>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Lista recenzii</title>
+</head>
+<body>
+<h2>Toate recenziile</h2>
+<a th:href="@{/reviews/new}">Adaugă recenzie nouă</a>
+<table>
+    <thead>
+    <tr>
+        <th>Utilizator</th>
+        <th>Produs</th>
+        <th>Rating</th>
+        <th>Titlu</th>
+        <th>Comentariu</th>
+        <th>Acțiuni</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="review : ${reviews}">
+        <td th:text="${review.user.username}"></td>
+        <td th:text="${review.product.name}"></td>
+        <td th:text="${review.rating}"></td>
+        <td th:text="${review.title}"></td>
+        <td th:text="${review.comment}"></td>
+        <td>
+            <a th:href="@{'/reviews/edit/' + ${review.id}}">Editează</a>
+            <a th:href="@{'/reviews/delete/' + ${review.id}}" onclick="return confirm('Ești sigur?')">Șterge</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

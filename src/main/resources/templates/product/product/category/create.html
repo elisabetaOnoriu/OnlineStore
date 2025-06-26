@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Creare categorie</title>
+</head>
+<body>
+<h2>Adaugă categorie</h2>
+
+<form th:action="@{/categories}" th:object="${category}" method="post">
+    <label for="name">Nume:</label>
+    <input type="text" id="name" th:field="*{name}" required/><br/>
+
+    <label for="description">Descriere:</label>
+    <textarea id="description" th:field="*{description}"></textarea><br/>
+
+    <button type="submit">Salvează</button>
+</form>
+
+<a th:href="@{/categories}">Înapoi la listă</a>
+</body>
+</html>

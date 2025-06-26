@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Listează categorii</title>
+</head>
+<body>
+<h2>Lista categoriilor</h2>
+
+<a th:href="@{/categories/new}">Adaugă categorie nouă</a>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>Nume</th>
+        <th>Descriere</th>
+        <th>Acțiuni</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="cat : ${categories}">
+        <td th:text="${cat.name}">Nume</td>
+        <td th:text="${cat.description}">Descriere</td>
+        <td>
+            <a th:href="@{'/categories/edit/' + ${cat.id}}">Editează</a> |
+            <a th:href="@{'/categories/delete/' + ${cat.id}}" onclick="return confirm('Ești sigur?')">Șterge</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
